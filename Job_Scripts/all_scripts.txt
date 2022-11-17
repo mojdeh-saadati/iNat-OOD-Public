@@ -1,0 +1,62 @@
+CUDA_VISIBLE_DEVICES=1 python -m torch.distributed.launch --use_env --master_port=1242 /work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Codes/Python_Codes/Classifiers/train_resnet_mojdeh.py --data-path  /work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Data/Others/iNat_ISU_total/iNat_ISU/   --model resnet50 --lr 1e-3 --opt adamw --epochs 50 --random-erase 0.1 --batch-size 256 --mixup-alpha 0.2 --cutmix-alpha 1.0 --val-resize-size 256 --val-crop-size 224 --train-crop-size 224 --output-dir /work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/Resnet50-142/checkpoints
+
+
+ python -m torch.distributed.launch --use_env --master_port=1242 /work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Codes/train_classifiers/train_resnet.py --data-path  /work/baskarg/iNaturalist/iNat_agimportant_ub/   --model resnet50 --lr 1e-3 --opt adamw --epochs 50 --random-erase 0.1 --batch-size 256 --mixup-alpha 0.2 --cutmix-alpha 1.0 --val-resize-size 256 --val-crop-size 224 --train-crop-size 224 --output-dir /work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/Resnet50-142/checkpoints   --resume /work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/Resnet50-142/checkpoints/model_9.pth
+
+
+
+
+CUDA_VISIBLE_DEVICES=1 python  /work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Codes/Python_Codes/Classifiers/train_resnet_mojdeh.py --data-path  /work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Data/Others/iNat_ISU_total/iNat_ISU/   --model resnet50 --lr 1e-3 --opt adamw --epochs 50 --random-erase 0.1 --batch-size 256 --mixup-alpha 0.2 --cutmix-alpha 1.0 --val-resize-size 256 --val-crop-size 224 --train-crop-size 224 --output-dir /work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/Resnet50-142/checkpoints
+
+
+
+ python -m torch.distributed.launch --use_env --master_port=1242 /work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Codes/train_classifiers/train_vgg.py --data-path  /work/baskarg/iNaturalist/iNat_agimportant_ub/   --model vgg11_bn --lr 1e-3 --opt adamw --epochs 50 --random-erase 0.1 --batch-size 256 --mixup-alpha 0.2 --cutmix-alpha 1.0 --val-resize-size 256 --val-crop-size 224 --train-crop-size 224 --output-dir /work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/VGG-142/checkpoints   --resume /work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/VGG-142/checkpoints/model_10.pth
+
+
+
+
+ python -m torch.distributed.launch --use_env --master_port=1242 /work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Codes/train_classifiers/train_regnet.py --data-path  /work/baskarg/iNaturalist/iNat_agimportant_ub/   --model regnet32 --lr 1e-3 --opt adamw --epochs 50 --random-erase 0.1 --batch-size 256 --mixup-alpha 0.2 --cutmix-alpha 1.0 --val-resize-size 256 --val-crop-size 224 --train-crop-size 224 --test-only
+
+
+
+Namespace(amp=False, auto_augment=None, batch_size=256, cache_dataset=False, clip_grad_norm=None, cutmix_alpha=1.0, data_path='/work/baskarg/iNaturalist/iNat_agimportant_ub/', device='cuda', dist_backend='nccl', dist_url='env://', distributed=True, epochs=50, gpu=0, interpolation='bilinear', label_smoothing=0.0, lr=0.001, lr_gamma=0.1, lr_scheduler='steplr', lr_step_size=30, lr_warmup_decay=0.01, lr_warmup_epochs=0, lr_warmup_method='constant', mixup_alpha=0.2, model='regnet32', model_ema=False, model_ema_decay=0.99998, model_ema_steps=32, momentum=0.9, norm_weight_decay=None, opt='adamw', output_dir='.', pretrained=False, print_freq=10, prototype=False, ra_reps=3, ra_sampler=False, random_erase=0.1, rank=0, resume='', start_epoch=0, sync_bn=False, test_only=True, train_crop_size=224, use_deterministic_algorithms=False, val_crop_size=224, val_resize_size=256, weight_decay=0.0001, weights=None, workers=16, world_size=1)
+
+
+
+####################################################################
+####################Extracting the prelogit:
+#################################################################
+python  /work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Codes/OOD_methods/extract_prelogit.py  --indist-train-path /work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Data/in-distribution/iNat_ISU142/OOD_train50/   --indist-test-path  /work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Data/in-distribution/iNat_ISU142/OOD_valid50/ --outdist-test-path /work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Data/out-distribution/noninsecta-2526c-valid/  --model-path /work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/Regnet32-142/checkpoints/model_0.pth --checkpoints  model_0  --logits-path /work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/Regnet32-142/prelogits/
+
+
+python  /work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Codes/OOD_methods/extract_prelogit.py  --indist-train-path /work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Data/in-distribution/iNat_ISU142/OOD_train50/   --indist-test-path  /work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Data/in-distribution/iNat_ISU142/OOD_valid30/ --outdist-test-path /work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Data/out-distribution/ImagenetInsects  --model-path /work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/Regnet32-142/checkpoints/model_0.pth --checkpoints  model_0  --logits-path /work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/Regnet32-142/prelogits/
+
+
+##############################################################
+python /work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Codes/OOD_methods/EnergyBasedModel_MaximumSoftmaxProbability.py  --indist-test-path /work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Data/in-distribution/iNat_ISU142/OOD_valid30 --outdist-test-path /work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Data/out-distribution/OODInsect/  --model-path  /work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/Regnet32-142/checkpoints/model_49.pth --checkpoint model_49  --MSP-path /work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/Regnet32-142/EMB_MSP_OODInsect/ --EBM-path  /work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/Regnet32-142/EMB_MSP_OODInsect/
+
+
+python /work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Codes/OOD_methods/EnergyBasedModel_MaximumSoftmaxProbability.py  --indist-test-path /work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Data/in-distribution/iNat_ISU142/OOD_valid30 --outdist-test-path /work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Data/out-distribution/imagenet_2012_5000-NoInsects/  --model-path  /work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/Regnet32-142/checkpoints/model_49.pth --checkpoint model_49  --MSP-path /work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/Regnet32-142/EMB_MSP_imagenet/  --EBM-path  /work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/Regnet32-142/EMB_MSP_imagenet/
+
+python /work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Codes/OOD_methods/EnergyBasedModel_MaximumSoftmaxProbability.py  --indist-test-path /work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Data/in-distribution/iNat_ISU142/OOD_valid30 --outdist-test-path /work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Data/out-distribution/ImagenetInsects/
+  --model-path  /work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/Regnet32-142/checkpoints/model_49.pth --checkpoint model_49  --MSP-path /work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/Regnet32-142/MSP_results/  --EBM-path  /work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/Regnet32-142/EBM_results/ 
+
+
+python /work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Codes/OOD_methods/EnergyBasedModel_MaximumSoftmaxProbability.py  --indist-test-path /work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Data/in-distribution/iNat_ISU142/OOD_valid30/ --outdist-test-path /work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Data/out-distribution/noninsecta-2526c-valid/ --model-path /work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/Resnet50-142/checkpoints/model_49.pth --checkpoint model_49  --MSP-path /work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/Resnet50-142/MSP_results/ --EBM-path  /work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/Resnet50-142/EBM_results/ 
+
+
+#####################################################################
+python /work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Codes/OOD_methods/get_ood_metrics.py --path /work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/Regnet32-142/MSP_results/model_0MSP.pt
+
+
+###################################################################
+###################### Extracting MAH
+###################################################################
+
+python /work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Codes/OOD_methods/Mahalanobis_distance1.py --outDistValid-embeds  /work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/Regnet32-142/prelogits/model_49outDistValid_embeds.pt --inDistValid-embeds /work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/Regnet32-142/prelogits/model_49inDistValid_embeds.pt --inDistTrain-embeds /work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/Regnet32-142/prelogits/model_49inDistTrain_embeds.pt --inDistTrain-labels /work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/Regnet32-142/prelogits/model_49inDistTrain_labels.pt --MAH-path /work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/Regnet32-142/MAH_results --checkpoints model_49
+
+
+###################################################################
+
+
+python /work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Codes/OOD_methods/ModelAccuracyReport.py --test-data /work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Data/in-distribution/iNat_ISU142/classifier_valid20/ --result-path /work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/Regnet32-142/checkpoints/accuracies.txt --model-path /work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/Regnet32-142/checkpoints/model_0.pth --model regnet32 --checkpoints model_49
