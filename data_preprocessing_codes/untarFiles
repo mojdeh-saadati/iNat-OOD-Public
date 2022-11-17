@@ -1,0 +1,2 @@
+ for file in *.tar;do tar -xf $file  -C ${file%".tar"}; done
+
