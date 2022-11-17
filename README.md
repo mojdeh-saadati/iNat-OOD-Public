@@ -1,2 +1,0 @@
-# iNat-OOD
-# Hello
