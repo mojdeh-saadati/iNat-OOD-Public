@@ -96,8 +96,8 @@ def standalone_get_prelogits(model, dataLoader):
         with torch.no_grad():    
             logits, layersOut = model(inputs) 
         #print("layersOut ===",layersOut)
-        print("layersOut type", type(layersOut))
-        print("layersOut",layersOut.keys())
+        #print("layersOut type", type(layersOut))
+        #print("layersOut",layersOut.keys())
         prelogits = layersOut['avgpool']
         if len(logits_all) == 0:
             logits_all  =  logits
@@ -116,8 +116,7 @@ def standalone_get_prelogits(model, dataLoader):
 
 def extract_prelogit(args):
     val_resize_size, val_crop_size, train_crop_size = 256, 224, 224
-    preprocessing = ClassificationPresetEval(
-    crop_size=val_crop_size, resize_size=val_resize_size)
+    preprocessing = ClassificationPresetEval(crop_size=val_crop_size, resize_size=val_resize_size)
     correct = 0;
     total = 0;
     with torch.no_grad():
@@ -129,18 +128,20 @@ def extract_prelogit(args):
             model.fc=torch.nn.Linear(3712,142) 
             torchLoad =torch.load(args.model_path,map_location=torch.device('cpu'))
             model.load_state_dict(torchLoad['model']) 
+
         if(args.model == 'resnet50'):
             model=torchvision.models.resnet50()
             model.fc=torch.nn.Linear(2048,142)
             torchLoad =torch.load(args.model_path,map_location=torch.device('cpu'))
             model.load_state_dict(torchLoad['model']) 
-
+            
         if(args.model == 'VGG'):
             model=torchvision.models.vgg11_bn()
             model.classifier._modules['6'] = nn.Linear(4096, 142) 
             torchLoad =torch.load(args.model_path,map_location=torch.device('cpu'))
             model.load_state_dict(torchLoad['model'])
-
+#            print("vgg torch load",torchLoad['model'].keys())
+        print("finished loading models")
 
         if(args.model == "regnet32"):
             modelN = NewModel(model , output_layers = [2]).to(device)
@@ -148,7 +149,7 @@ def extract_prelogit(args):
             modelN = NewModel(model , output_layers = [8]).to(device)
         if(args.model == 'VGG'):
             # we put it for default unless we fix it. 
-            modelN = NewModel(model , output_layers = [8]).to(device)
+            modelN = NewModel(model , output_layers = [1]).to(device)
         model.eval()
 
 
@@ -172,7 +173,6 @@ def extract_prelogit(args):
         outDistValid_loader = DataLoader(outDistValid, batch_size = 256, shuffle = False, num_workers=8, pin_memory=True)
 
 
-
         print("start prelogit extractions")
         step1 = time.time()
         inDistTrain_embeds, inDistTrain_logits_all, inDistTrain_labels = standalone_get_prelogits(modelN, inDistTrain_loader)
@@ -181,6 +181,7 @@ def extract_prelogit(args):
         torch.save(torch.tensor(inDistTrain_embeds),args.logits_path+args.checkpoints+"inDistTrain_embeds.pt")
         torch.save(torch.tensor(inDistTrain_labels),args.logits_path+args.checkpoints+"inDistTrain_labels.pt")
 
+        """
         step1 = time.time()
         inDistValid_embeds, inDistValid_logits_all, inDistValid_labels = standalone_get_prelogits(modelN, inDistValid_loader)
         step2 = time.time()
@@ -192,7 +193,7 @@ def extract_prelogit(args):
         step2 = time.time()
         print("finish third Duration", step2 - step1)
         torch.save(torch.tensor(outDistValid_embeds),args.logits_path+args.checkpoints+"outDistValid_embeds.pt")
-
+        """
         
 
 def get_args_parser(add_help=True):

@@ -60,6 +60,11 @@ def MSP_EBM(args):
         model.fc=torch.nn.Linear(2048,142)
         torchLoad =torch.load(args.model_path,map_location=torch.device('cuda'))
         model.load_state_dict(torchLoad['model']) 
+    if(args.model == 'VGG'):
+        model=torchvision.models.vgg11_bn()
+        model.classifier._modules['6'] = nn.Linear(4096, 142) 
+        torchLoad =torch.load(args.model_path,map_location=torch.device('cpu'))
+        model.load_state_dict(torchLoad['model'])
             #weights=torch.load('imagenet-21k-weights',map_location=torch.device('cuda'))['model']
             #Format: torch.nn.Linear(Dimension of latent space, Number of classes)
 
