@@ -1,8 +1,10 @@
+from traceback import print_list
 from sklearn.metrics import roc_auc_score
 from sys import getsizeof
 from torch import linalg as LA
 import pickle;
 import gc
+import time
 from functools import reduce
 import operator as op
 import numpy as np;
@@ -23,11 +25,11 @@ import pandas as pd
 
 
 
-def get_scores(
+def get_scores(args,
     indist_train_embeds_in_touse,
     indist_train_labels_in,
-    indist_test_embeds_in_touse,
-    outdist_test_embeds_in_touse,
+#    indist_test_embeds_in_touse,
+#    outdist_test_embeds_in_touse,
     all_train_mean,
     subtract_mean = True,
     normalize_to_unity = True,
@@ -36,54 +38,41 @@ def get_scores(
     norm_name = "L2",
     ):
 #  
-##################################################################################################
+##########################################################################################
   # Normalizing the input
+##########################################################################################
   print("indist_train_labels_in inside get_scores ====", indist_train_labels_in)
   description = ""
-  
-  #indist_train_embeds_in_touse = torch.squeeze(indist_train_embeds_in)
-  #indist_test_embeds_in_touse = torch.squeeze(indist_test_embeds_in)
-  #outdist_test_embeds_in_touse = torch.squeeze(outdist_test_embeds_in)
   
   df = pd.DataFrame(columns = ["Size","Type", "ObjectSize"] )
 
   if subtract_mean:
-    indist_train_embeds_in_touse = torch.sub(indist_train_embeds_in_touse, all_train_mean)
-    indist_test_embeds_in_touse = torch.sub(indist_test_embeds_in_touse, all_train_mean)
-    outdist_test_embeds_in_touse = torch.sub(outdist_test_embeds_in_touse, all_train_mean)
-    description = description+" subtract mean,"
+    print("all_train_mean : ",torch.squeeze(all_train_mean).shape)
+    print("indist_train_embeds_in_touse :", indist_train_embeds_in_touse.shape)
+    indist_train_embeds_in_touse = torch.sub(indist_train_embeds_in_touse, torch.squeeze(all_train_mean))
     print("pass the subtract_mean")
 
 
 
   if normalize_to_unity:
     indist_train_embeds_in_touse = torch.div(indist_train_embeds_in_touse, LA.norm(indist_train_embeds_in_touse,dim=1,keepdims=True))
-    indist_test_embeds_in_touse = torch.div(indist_test_embeds_in_touse , LA.norm(indist_test_embeds_in_touse,dim=1,keepdims=True))
-    outdist_test_embeds_in_touse = torch.div(outdist_test_embeds_in_touse, LA.norm(outdist_test_embeds_in_touse,dim=1,keepdims=True))
-    description = description + " unit norm,"
     print("pass the normalize_to_unity")  
 
-
-  print("passed first mean")
-  
-  print("indist_train_embeds_in_touse",indist_train_embeds_in_touse)
-  print("indist_test_embeds_in_touse",indist_test_embeds_in_touse)
-  print("outdist_test_embeds_in_touse",outdist_test_embeds_in_touse)  
+  print("indist_train_embeds_in_touse",indist_train_embeds_in_touse)  
   print("indist_train_labels_in",indist_train_labels_in)
 ###################################################################################################    
   #Calculate overal mean and covariance of indist train
-
   maha_intermediate_dict = dict()
-  mean = torch.squeeze(torch.mean(indist_train_embeds_in_touse,dim=0))
-  meanT = np.cov(torch.t(indist_train_embeds_in_touse - mean).numpy())
+  mean = torch.squeeze(all_train_mean)
+
+  transpose= torch.t(indist_train_embeds_in_touse - mean)
+  meanT = np.cov(transpose.cpu().detach().numpy())
   cov = torch.tensor(meanT)
   #cov = cov + 0.01* np.random.rand()
   cov = cov + torch.rand(cov.shape)
   cov_inv = LA.inv(cov) 
   
-  print("train in dist mean", meanT)
-  print("train in dist cov_inv", cov_inv)
-
+ 
   #getting per class means and average of per class covariance.
   class_means = []
   class_covs_names = []
@@ -111,26 +100,36 @@ def get_scores(
   maha_intermediate_dict["mean"] = mean
   maha_intermediate_dict["cov_inv"] = cov_inv
   maha_intermediate_dict["class_cov_invs"] = class_cov_invs
-
+  del(indist_train_embeds_in_touse)
 #################################################################################################### 
 # We measure two types of distance. 1- distance to whole distribution. 
+  indist_test_embeds_in_touse = torch.squeeze(torch.load(args.inDistValid_embeds)) 
+  outdist_test_embeds_in_touse = torch.squeeze(torch.load(args.outDistValid_embeds))
+  if subtract_mean:
+    indist_test_embeds_in_touse = torch.sub(indist_test_embeds_in_touse, torch.squeeze(all_train_mean))
+    outdist_test_embeds_in_touse = torch.sub(outdist_test_embeds_in_touse, torch.squeeze(all_train_mean))
+  #description = description+" subtract mean,"
+  #  print(description)
 
+
+
+  if normalize_to_unity:
+    indist_test_embeds_in_touse = torch.div(indist_test_embeds_in_touse , LA.norm(indist_test_embeds_in_touse,dim=1,keepdims=True))
+    outdist_test_embeds_in_touse = torch.div(outdist_test_embeds_in_touse, LA.norm(outdist_test_embeds_in_touse,dim=1,keepdims=True))
+    description = description + " unit norm,"
+    print(description)
 
   out_totrain = maha_distance(outdist_test_embeds_in_touse,cov_inv,mean,norm_name)
   in_totrain = maha_distance(indist_test_embeds_in_touse,cov_inv,mean,norm_name)
-  print("out_totrain ====", out_totrain)
-  print("in_totrain ====", in_totrain)
+  start = time.time();
   # Since class cov invs is the same for all classes we omit the index. 
   out_totrainclasses = [maha_distance(outdist_test_embeds_in_touse,class_cov_invs,class_means[c],norm_name) for c in range(indist_classes)]
   in_totrainclasses = [maha_distance(indist_test_embeds_in_touse,class_cov_invs,class_means[c],norm_name) for c in range(indist_classes)]
-  print("out_totrainclasses ====", out_totrainclasses)
-  print("in_totrainclasses ====", in_totrainclasses)
+  end = time.time()
 
   # 2- distance to nearest class 
   out_scores = torch.min(torch.stack(out_totrainclasses,dim=0),dim=0)[0]
   in_scores = torch.min(torch.stack(in_totrainclasses,dim=0),dim=0)[0]
-  print("out_scores ====", out_scores)
-  print("in_scores ====", in_scores)
 # Normalization
   if subtract_train_distance:
     out_scores = torch.sub(out_scores , out_totrain)
@@ -163,48 +162,25 @@ def MAH(args):
     inDistTrain_embeds =  torch.load(args.inDistTrain_embeds)
     all_train_mean = torch.mean(inDistTrain_embeds,dim=0,keepdims=True)
     inDistTrain_embeds = torch.squeeze(inDistTrain_embeds)
-    print("One Done")
     inDistTrain_labels = torch.squeeze(torch.load(args.inDistTrain_labels))
-    print("Two Done")
 
-    inDistValid_embeds = torch.squeeze(torch.load(args.inDistValid_embeds))
-    print("Three Done")
+   
 
-    outDistValid_embeds = torch.squeeze(torch.load(args.outDistValid_embeds))
-    print("Four Done")
-
-
-    df = pd.DataFrame(columns = ["Size","Type", "ObjectSize"] )
-
-    for obj in gc.get_objects():
-        try:
-            if torch.is_tensor(obj) or (hasattr(obj, 'data') and torch.is_tensor(obj.data)):
-                df = df.append({"name":"{:.13f}".format(id(obj)),"Size":reduce(op.mul,  obj.size() )/(1024*3*8),"Type":type(obj), "ObjectSize" : obj.size()} ,ignore_index = True)
-        except:
-            pass
-    print(df.sort_values(by = ["Size"], ascending=False))    
-
-    print("fifth done")    
-    print("inDistTrain_embeds : ",inDistTrain_embeds.element_size() *inDistTrain_embeds.nelement()/(1024**3))
-    print("inDistTrain_labels", inDistTrain_labels.element_size() *inDistTrain_labels.nelement()/(1024**3))
-    print("inDistValid_embeds", inDistValid_embeds.element_size() *inDistValid_embeds.nelement()/(1024**3))
-    print("outDistValid_embeds",outDistValid_embeds.element_size() * outDistValid_embeds.nelement()/(1024**3))
-
-    onehots, scores, description, maha_intermediate_dict, in_scores, out_scores = get_scores(
+    onehots, scores, description, maha_intermediate_dict, in_scores, out_scores = get_scores(args,
             inDistTrain_embeds,
             inDistTrain_labels,
-            inDistValid_embeds,
-            outDistValid_embeds,
+            #inDistValid_embeds,
+            #outDistValid_embeds,
             all_train_mean,
             indist_classes = 142,
             subtract_mean = False,
-            normalize_to_unity = True,
+            normalize_to_unity =False,
             subtract_train_distance = True
         )
 
     onehots = onehots.numpy().reshape((onehots.shape[0], -1))
     scores = scores.numpy().reshape((scores.shape[0], -1))
-    torch.save([in_scores, out_scores], args.MAH_path+"/"+args.checkpoint+'MAH.pt')
+    torch.save([in_scores, out_scores], args.MAH_path+"/"+args.checkpoints+'MAH.pt')
 
 
 
@@ -225,4 +201,5 @@ def get_args_parser(add_help=True):
 
 if __name__ == "__main__":
     args = get_args_parser().parse_args()
+    print(args.MAH_path+"/"+args.checkpoints)
     MAH(args) 
