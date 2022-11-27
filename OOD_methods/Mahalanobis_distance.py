@@ -160,6 +160,7 @@ def maha_distance(xs,cov_inv_in,mean_in,norm_type=None):
 def MAH(args):
     
     inDistTrain_embeds =  torch.load(args.inDistTrain_embeds)
+    print("inDistTrain_embeds === ", inDistTrain_embeds.shape)
     all_train_mean = torch.mean(inDistTrain_embeds,dim=0,keepdims=True)
     inDistTrain_embeds = torch.squeeze(inDistTrain_embeds)
     inDistTrain_labels = torch.squeeze(torch.load(args.inDistTrain_labels))

@@ -47,33 +47,56 @@ class ClassificationPresetEval:
 
 
 
-class NewModel(nn.Module):
+class NewModel(nn.Sequential):
     def __init__(self, model, output_layers, *args):
         super().__init__(*args)
-        self.output_layers = output_layers
-        #print(self.output_layers)
-        self.selected_out = OrderedDict()
-        #PRETRAINED MODEL
-        self.trained_model=model
- 
-        self.fhooks = []
-        for i,l in enumerate(list(self.trained_model._modules.keys())):
-            print("i ==",i,"l ===", l)
-            if i in self.output_layers:
-                self.layer_name = l;
-                print("entered the if clause")
-                self.fhooks.append(getattr(self.trained_model,l).register_forward_hook(self.forward_hook(l)))
-        print("end for loop")
-    def forward_hook(self,layer_name):
-        def hook(module, input, output):
-            self.selected_out[self.layer_name] = output
-        return hook
+        self.trained_model = model;    
+        self.return_intermediate = True;
 
-    def forward(self, x):
-        out = self.trained_model(x)
-        return out, self.selected_out
+    def forward(self, input):
+        if not self.return_intermediate:
+            return self.trained_model(input)
+
+        intermediate_outputs = {}
+        output = input
+#        print("self.trained_model._modules['classifier']",type(self.trained_model._modules['classifier']))
+#        print("self.trained_model._modules['classifier'].named_children()", self.trained_model._modules['classifier'].named_children())
+
+        for k in self.trained_model._modules.keys():
+            for name, module in self.trained_model._modules[k].named_children():
+                #print("name ===", name, "module ===", module)
+                #print("input.shape", output.shape)
+                #print(" k =====", k , "and name ====", name)
+                if( k == "classifier" and name =="0" ):
+                    output = torch.reshape(output, (output.shape[0],-1))   
+                #    print("output.shape after editing", output.shape) 
+                    output = module(output)
+                elif( k == "classifier" and name =="5" ):  
+                #    print("output.shape after editing", output.shape) 
+                    output = intermediate_outputs = module(output)
+                else:
+                    output = module(output)
+
+        return output, intermediate_outputs
     
+"""
+class IntermediateSequential(nn.Sequential):
+    def __init__(self, *args, return_intermediate=True):
+        super().__init__(*args)
+        self.return_intermediate = return_intermediate
 
+    def forward(self, input):
+        if not self.return_intermediate:
+            return super().forward(input)
+
+        intermediate_outputs = {}
+        output = input
+        for name, module in self.named_children():
+            output = intermediate_outputs[name] = module(output)
+
+        return output, intermediate_outputs
+
+"""
 
 def standalone_get_prelogits(model, dataLoader):
     print("endered standalone")
@@ -98,7 +121,7 @@ def standalone_get_prelogits(model, dataLoader):
         #print("layersOut ===",layersOut)
         #print("layersOut type", type(layersOut))
         #print("layersOut",layersOut.keys())
-        prelogits = layersOut['avgpool']
+        prelogits = layersOut
         if len(logits_all) == 0:
             logits_all  =  logits
         else:
@@ -176,6 +199,7 @@ def extract_prelogit(args):
 
 
         print("start prelogit extractions")
+
         step1 = time.time()
         inDistTrain_embeds, inDistTrain_logits_all, inDistTrain_labels = standalone_get_prelogits(modelN, inDistTrain_loader)
         step2 = time.time()
@@ -183,7 +207,6 @@ def extract_prelogit(args):
         torch.save(torch.tensor(inDistTrain_embeds),args.logits_path+args.checkpoints+"inDistTrain_embeds.pt")
         torch.save(torch.tensor(inDistTrain_labels),args.logits_path+args.checkpoints+"inDistTrain_labels.pt")
 
-        """
         step1 = time.time()
         inDistValid_embeds, inDistValid_logits_all, inDistValid_labels = standalone_get_prelogits(modelN, inDistValid_loader)
         step2 = time.time()
@@ -195,7 +218,6 @@ def extract_prelogit(args):
         step2 = time.time()
         print("finish third Duration", step2 - step1)
         torch.save(torch.tensor(outDistValid_embeds),args.logits_path+args.checkpoints+"outDistValid_embeds.pt")
-        """
         
 
 def get_args_parser(add_help=True):
