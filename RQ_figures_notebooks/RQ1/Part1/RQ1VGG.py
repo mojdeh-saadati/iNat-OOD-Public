@@ -70,7 +70,7 @@ paths = ["/work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/VGG-142/MSP
     "/work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/VGG-142/MAH_results_nonInsecta2526/model_10MAH.pt",
     "/work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/VGG-142/MAH_results_nonInsecta2526/model_49MAH.pt"
     ]
-chpsVGG = ["88.27","92.02","95.59","97.89"] *3
+chpsVGG = ["80.09","83.93","90.57","94.63"] *3
 algs  = ["MSP"]*4 + ["EBM"]*4 + ["MAH"]*4 
 vggRes = pd.DataFrame(columns = ["checkpoints","OODalg","AUROC", "AUPR", "FPR95"] );
 safeL, riskyL = loadData_and_minSize(paths)
