@@ -351,9 +351,9 @@ def main(args):
 
     model_without_ddp = model
     if args.distributed:
-        #model = torch.nn.parallel.DistributedDataParallel(model, device_ids=[args.gpu])
+        model = torch.nn.parallel.DistributedDataParallel(model, device_ids=[args.gpu])
         print('Model DDP')
-        model = torch.nn.parallel.DistributedDataParallel(model)
+        #model = torch.nn.parallel.DistributedDataParallel(model)
         
         model_without_ddp = model.module
 
@@ -401,7 +401,7 @@ def main(args):
             train_sampler.set_epoch(epoch)
         train_one_epoch(model, criterion, optimizer, data_loader, device, epoch, args, model_ema, scaler)
         lr_scheduler.step()
-        #evaluate(model, criterion, data_loader_test, device=device)
+#        evaluate(model, criterion, data_loader_test, device=device)
         if model_ema:
             evaluate(model_ema, criterion, data_loader_test, device=device, log_suffix="EMA")
         if args.output_dir:
