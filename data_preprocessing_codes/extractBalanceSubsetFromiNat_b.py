@@ -3,8 +3,8 @@ import shutil;
 
 
 path = "/work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Data/in-distribution/iNat_ISU142_balanced/iNat_agimportant/train/";
-destinationTrain_b = "/work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Data/in-distribution/iNat_ISU142_balanced/iNat_agimportant/train_b/train/";
-
+destinationTrain_ub_uniform = "/work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Data/in-distribution/iNat_ISU142_balanced/iNat_agimportant/train_ub_uniform/train/";
+import random;
 for it in os.scandir(path):
     print(it.path);
     try:
@@ -12,14 +12,16 @@ for it in os.scandir(path):
     except:
         continue;
     dirPathList=  it.path.split("/")    
+    folderSize = random.randint(22,800)
+    print("folder Size", folderSize, end = "")
     for i,img in enumerate(dir):
-        print(i)
-        if i >= 411:
+
+        if i >= folderSize:
             break;
-        if i < 411:
-            if not os.path.exists(destinationTrain_b+"/"+dirPathList[-1]):
-                os.makedirs( destinationTrain_b+"/"+dirPathList[-1], exist_ok=False)
-            shutil.copy(it.path +"/"+img, destinationTrain_b+"/"+dirPathList[-1]+"/"+img);
+        if i < folderSize:
+            if not os.path.exists(destinationTrain_ub_uniform+"/"+dirPathList[-1]):
+                os.makedirs( destinationTrain_ub_uniform+"/"+dirPathList[-1], exist_ok=False)
+            shutil.copy(it.path +"/"+img, destinationTrain_ub_uniform+"/"+dirPathList[-1]+"/"+img);
 
 """
 path = "/work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Data/in-distribution/iNat_ISU142_balanced/iNat_agimportant/val/";

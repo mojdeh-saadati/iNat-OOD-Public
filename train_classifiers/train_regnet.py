@@ -555,7 +555,6 @@ def get_args_parser(add_help=True):
         action="store_true",
     )
     parser.add_argument("--weights", default=None, type=str, help="the weights enum name to load")
-
     return parser
 
 

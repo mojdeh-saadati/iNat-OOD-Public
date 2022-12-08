@@ -16,6 +16,7 @@ from torchvision.transforms.functional import InterpolationMode
 import time
 torch.backends.cudnn.benchmark = False
 torch.backends.cudnn.deterministic = True
+
 class ClassificationPresetEval:
     def __init__(
         self,
