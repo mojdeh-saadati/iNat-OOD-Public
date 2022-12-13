@@ -105,7 +105,7 @@ def get_curve(known, novel, method=None):
 
     return tp, fp, fpr_at_tpr95
 
-
+"""
 def get_args_parser(add_help=True):
 
     parser = argparse.ArgumentParser(description="PyTorch Classification Training", add_help=add_help)
@@ -113,7 +113,7 @@ def get_args_parser(add_help=True):
 
     return parser
 
-"""
+
 if __name__ == "__main__":
     args = get_args_parser().parse_args()
     return_OOD_metrics_info(args.path) 

@@ -12,4 +12,5 @@
 #  --output # job standard output file (%j replaced by job id)
 #SBATCH --error="training.e" # job standard error file (%j replaced by job id)
 
-rsync -a /work/baskarg/iNaturalist/iNat_2526_13mil/ /work/baskarg/Mojdeh/AlphaNet/Data/iNat_2526_13mil
+#srun python  /work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Codes/OOD_methods/extract_prelogit.py  --indist-train-path /work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Data/in-distribution/iNat_ISU142_balanced/iNat_agimportant/trainOOD/   --indist-test-path  /work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Data/in-distribution/iNat_ISU142_balanced/iNat_agimportant/inDistOOD/ --outdist-test-path /work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Data/out-distribution/noninsecta-2526c-valid/  --model-path /work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/Regnet32_balancedSubset_ub_uniform/checkpoints/model_49.pth --checkpoints  model_49  --logits-path /work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/Regnet32_balancedSubset_ub_uniform/prelogits/ --model regnet32
+

@@ -20,9 +20,8 @@ import random
 import sys
 sys.path.insert(1, '/work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Codes/OOD_methods')
 random.seed(0)
- 
-import get_ood_metrics;
 
+import get_ood_metrics;
 def loadData_and_minSize(paths):
     minS = -1;
     safeL = [];
