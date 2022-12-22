@@ -173,7 +173,7 @@ def extract_prelogit(args):
 
         outDistValid = datasets.ImageFolder(outDistValidStr,preprocessing)
         outDistValid_loader = DataLoader(outDistValid, batch_size = 256, shuffle = False, num_workers=8, pin_memory=True)
-        """
+        
         print("start prelogit extractions")
         step1 = time.time()
         inDistTrain_embeds, inDistTrain_logits_all, inDistTrain_labels = standalone_get_prelogits(modelN, inDistTrain_loader)
@@ -193,7 +193,7 @@ def extract_prelogit(args):
         step2 = time.time()
         print("finish third Duration", step2 - step1)
         torch.save(torch.tensor(outDistValid_embeds),args.logits_path+args.checkpoints+"outDistValid_embeds.pt")
-
+        """
 def get_args_parser(add_help=True):
 
     import argparse

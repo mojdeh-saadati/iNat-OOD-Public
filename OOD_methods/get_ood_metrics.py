@@ -15,9 +15,11 @@ import nbimporter
 import argparse 
 
 device = 'cuda'
-
-
-
+#################################################################
+# return_OOD_metrics_info in the first step takes the result vectors 
+# if they are empty then it can read if from the input path. 
+#
+##################################################################
 def return_OOD_metrics_info(path, risky = None , safe = None):
     
     if((len(risky) == 0) and (len(safe) == 0)):

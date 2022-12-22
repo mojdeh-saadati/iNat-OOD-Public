@@ -56,21 +56,53 @@ def loadData_and_minSize(paths):
 
 paths = ["/work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/VGG-142/MSP_results_nonInsecta2526/model_0MSP.pt",
     "/work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/VGG-142/MSP_results_nonInsecta2526/model_1MSP.pt",
+    "/work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/VGG-142/MSP_results_nonInsecta2526/model_2MSP.pt",
+    "/work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/VGG-142/MSP_results_nonInsecta2526/model_3MSP.pt",
+    "/work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/VGG-142/MSP_results_nonInsecta2526/model_4MSP.pt",
+    "/work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/VGG-142/MSP_results_nonInsecta2526/model_5MSP.pt",
+    "/work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/VGG-142/MSP_results_nonInsecta2526/model_6MSP.pt",
+    "/work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/VGG-142/MSP_results_nonInsecta2526/model_7MSP.pt",
+    "/work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/VGG-142/MSP_results_nonInsecta2526/model_8MSP.pt",
+    "/work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/VGG-142/MSP_results_nonInsecta2526/model_9MSP.pt",
     "/work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/VGG-142/MSP_results_nonInsecta2526/model_10MSP.pt",
+    "/work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/VGG-142/MSP_results_nonInsecta2526/model_20MSP.pt",
+    "/work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/VGG-142/MSP_results_nonInsecta2526/model_30MSP.pt",
+    "/work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/VGG-142/MSP_results_nonInsecta2526/model_40MSP.pt",
     "/work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/VGG-142/MSP_results_nonInsecta2526/model_49MSP.pt",
     
     "/work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/VGG-142/EBM_results_nonInsecta2526/model_0EBM.pt",
     "/work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/VGG-142/EBM_results_nonInsecta2526/model_1EBM.pt",
+    "/work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/VGG-142/EBM_results_nonInsecta2526/model_2EBM.pt",
+    "/work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/VGG-142/EBM_results_nonInsecta2526/model_3EBM.pt",
+    "/work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/VGG-142/EBM_results_nonInsecta2526/model_4EBM.pt",
+    "/work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/VGG-142/EBM_results_nonInsecta2526/model_5EBM.pt",
+    "/work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/VGG-142/EBM_results_nonInsecta2526/model_6EBM.pt",
+    "/work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/VGG-142/EBM_results_nonInsecta2526/model_7EBM.pt",
+    "/work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/VGG-142/EBM_results_nonInsecta2526/model_8EBM.pt",
+    "/work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/VGG-142/EBM_results_nonInsecta2526/model_9EBM.pt",
     "/work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/VGG-142/EBM_results_nonInsecta2526/model_10EBM.pt",
+    "/work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/VGG-142/EBM_results_nonInsecta2526/model_20EBM.pt",
+    "/work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/VGG-142/EBM_results_nonInsecta2526/model_30EBM.pt",
+    "/work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/VGG-142/EBM_results_nonInsecta2526/model_40EBM.pt",
     "/work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/VGG-142/EBM_results_nonInsecta2526/model_49EBM.pt",
 
     "/work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/VGG-142/MAH_results_nonInsecta2526/model_0MAH.pt",
     "/work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/VGG-142/MAH_results_nonInsecta2526/model_1MAH.pt",
+    "/work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/VGG-142/MAH_results_nonInsecta2526/model_2MAH.pt",
+    "/work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/VGG-142/MAH_results_nonInsecta2526/model_3MAH.pt",
+    "/work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/VGG-142/MAH_results_nonInsecta2526/model_4MAH.pt",
+    "/work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/VGG-142/MAH_results_nonInsecta2526/model_5MAH.pt",
+    "/work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/VGG-142/MAH_results_nonInsecta2526/model_6MAH.pt",
+    "/work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/VGG-142/MAH_results_nonInsecta2526/model_7MAH.pt",
+    "/work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/VGG-142/MAH_results_nonInsecta2526/model_8MAH.pt",
+    "/work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/VGG-142/MAH_results_nonInsecta2526/model_9MAH.pt",   
     "/work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/VGG-142/MAH_results_nonInsecta2526/model_10MAH.pt",
-    "/work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/VGG-142/MAH_results_nonInsecta2526/model_49MAH.pt"
-    ]
-chpsVGG = ["80.09","83.93","90.57","94.63"] *3
-algs  = ["MSP"]*4 + ["EBM"]*4 + ["MAH"]*4 
+    "/work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/VGG-142/MAH_results_nonInsecta2526/model_20MAH.pt",
+    "/work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/VGG-142/MAH_results_nonInsecta2526/model_30MAH.pt",
+    "/work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/VGG-142/MAH_results_nonInsecta2526/model_40MAH.pt",
+    "/work/baskarg/Mojdeh/iNat_Project-mini-Insecta-2021/Models/VGG-142/MAH_results_nonInsecta2526/model_49MAH.pt"]
+chpsVGG = ["80.09","83.93","C2","C3","C4","C5","C6","C7","C8","C9","90.57","C20","C30","C40","94.63"] *3
+algs  = ["MSP"]*15 + ["EBM"]*15 + ["MAH"]*15 
 vggRes = pd.DataFrame(columns = ["checkpoints","OODalg","AUROC", "AUPR", "FPR95"] );
 safeL, riskyL = loadData_and_minSize(paths)
 for path,alg, chp, safe, risky in zip(paths,algs,chpsVGG, safeL, riskyL):

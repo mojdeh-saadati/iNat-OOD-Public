@@ -116,12 +116,13 @@ def eval(args):
 
     acc =  float(correct/total)
 
-
+    from csv import writer
     print(" final accuracy :", acc)        
-    more_lines = ["\n",args.checkpoints,",",str(acc)]
-    with open(args.result_path, 'a') as f:
-        f.write('\n'.join(more_lines))
-
+    more_lines = [args.model,args.checkpoints,str(acc)]
+    with open(args.result_path, 'a') as f_object:
+        writer_object = writer(f_object)
+        writer_object.writerow(more_lines)
+        f_object.close()
 
 
 def get_args_parser(add_help=True):
