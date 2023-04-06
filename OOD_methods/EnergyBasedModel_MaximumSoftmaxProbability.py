@@ -13,7 +13,7 @@ import sklearn.metrics as sk
 from collections import OrderedDict
 import nbimporter
 from torchvision.transforms.functional import InterpolationMode
-
+import pandas as pd;
 device = 'cuda'
 torch.backends.cudnn.benchmark = False
 torch.backends.cudnn.deterministic = True
@@ -77,9 +77,11 @@ def MSP_EBM(args):
     
     
     inDistValid = datasets.ImageFolder( inDistValidStr, preprocessing)
-    inDistValid_loader = DataLoader( inDistValid, batch_size = 256, shuffle = False, num_workers=8, pin_memory=True)
+    # return batch size to 256 
+    inDistValid_loader = DataLoader( inDistValid, batch_size = 1, shuffle = False, num_workers=8, pin_memory=True)
     outDistValid = datasets.ImageFolder(outDistValidStr, preprocessing)
-    outDistValid_loader = DataLoader(outDistValid, batch_size = 256, shuffle = False, num_workers=8, pin_memory=True)
+    # return batch size to 256
+    outDistValid_loader = DataLoader(outDistValid, batch_size = 1, shuffle = False, num_workers=8, pin_memory=True)
 
         
     # No inference is needed. Prediction  
@@ -93,6 +95,7 @@ def MSP_EBM(args):
     model.to(device)
     softmax_indist = []
     energy_indist = []
+    figureDF = pd.DataFrame(columns = ['name', 'in_out','energy'])
     inDistValid_y = []
     test_loss = 0
     accuracy = 0
@@ -101,7 +104,9 @@ def MSP_EBM(args):
     CT = 0;
     T = 1;
     with torch.no_grad():
-        for inputs, labels in inDistValid_loader:
+        for i, (inputs, labels) in enumerate(inDistValid_loader):
+            #print("i === ", i)
+#        for inputs, labels in inDistValid_loader:
             inputs, labels = inputs.to(device, non_blocking=True),labels.to(device,non_blocking=True)
             if len(inDistValid_y) == 0:
                 inDistValid_y = labels
@@ -122,6 +127,16 @@ def MSP_EBM(args):
                 energy_indist  =  energy
             else:
                 energy_indist  = torch.cat((energy_indist,energy), dim = 0)          
+            
+            s = np.random.uniform(0,1,1)
+            if(s <= 0.01):    
+                dict = {'name':inDistValid_loader.dataset.samples[i][0] ,'in_out':0, 'energy':energy}
+                figureDF = figureDF.append(dict, ignore_index=True)
+
+            print("figureDF.shape",figureDF.shape)
+            print("i===", i)
+
+
     print("finished-IN")    
     # Out distribution data values     
     ################################################################################
@@ -137,7 +152,7 @@ def MSP_EBM(args):
     model = model.to(device)
     CT = 0;
     with torch.no_grad():
-        for inputs, labels in outDistValid_loader:
+        for i , (inputs, labels) in enumerate(outDistValid_loader):
 #            CT = CT + 1;
 #            if CT > 10:
 #                break;
@@ -161,6 +176,13 @@ def MSP_EBM(args):
                 energy_outdist  =  energy
             else:
                 energy_outdist  =  torch.cat((energy_outdist,energy), dim = 0)  
+            s = np.random.uniform(0,1,1)
+            if(s <= 0.01):    
+                dict = {'name':outDistValid_loader.dataset.samples[i][0] ,'in_out':1, 'energy':energy}
+                figureDF = figureDF.append(dict, ignore_index=True)
+
+            print("figureDF.shape",figureDF.shape)
+            print("i===", i)
 
 
    
@@ -180,7 +202,8 @@ def MSP_EBM(args):
 
     torch.save([s_prob_in, s_prob_out], args.MSP_path+"/"+args.checkpoint+'MSP.pt')
     torch.save([energy_indist, energy_outdist], args.EBM_path+"/"+args.checkpoint+'EBM.pt')
- 
+    figureDF.to_csv(args.EBM_path + 'figures_energyResults.csv') 
+
 
 
 
