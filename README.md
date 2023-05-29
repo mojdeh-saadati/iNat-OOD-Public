@@ -1,1 +1,1 @@
-#Out-of-distribution detection algorithms for robust insect classification
+# Out-of-distribution detection algorithms for robust insect classification
